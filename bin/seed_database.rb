@@ -3,13 +3,14 @@ require_relative '../config/environment'
 def api_response(url, key)
     response_string = RestClient.get(url)
     JSON.parse(response_string)[key]
+    # creates array of hashes from key in API
 end
 
 def find_or_create_cocktails_from_first_letter(letter)
     cocktail_array = api_response("https://www.thecocktaildb.com/api/json/v1/1/search.php?f=#{letter}", "drinks")
     # creates array of hashes of drink data from API
     if cocktail_array
-        # skips letters without cocktails such as U and X
+        # skips letters without cocktails such as 'U' and 'X'
         cocktail_array.each do |cocktail_hash|
             # iterates though each cocktail in drinks array
             name = cocktail_hash["strDrink"]
@@ -26,7 +27,6 @@ def find_or_create_cocktails_from_first_letter(letter)
         end
     end
 end
-
 
 def find_or_create_ingredient(ingredient)
     ingredient_hash = api_response("https://www.thecocktaildb.com/api/json/v1/1/search.php?i=#{ingredient.to_ascii}", "ingredients")[0]
@@ -47,8 +47,8 @@ def create_ingredients_from_cocktail(cocktail_hash, new_cocktail)
     (1..15).each do |num| 
         # iterates through 15 possible ingredients
         if cocktail_hash["strIngredient#{num}"] == nil
-            # ends at the first nonexistent ingredient
             break
+            # ends at the first nonexistent ingredient
         else
             new_cocktail.ingredients << find_or_create_ingredient(cocktail_hash["strIngredient#{num}"])
             # creates ingredient if nonexistent, then adds to cocktail
@@ -62,3 +62,4 @@ end
 ('0'..'9').each do |letter|
     find_or_create_cocktails_from_first_letter(letter)
 end
+# iterates through every letter and number creating cocktails and their ingredients from the API
