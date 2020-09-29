@@ -45,13 +45,21 @@ end
 
 def create_ingredients_from_cocktail(cocktail_hash, new_cocktail)
     (1..15).each do |num| 
+        new_ingredient = cocktail_hash["strIngredient#{num}"]
         # iterates through 15 possible ingredients
-        if cocktail_hash["strIngredient#{num}"] == nil
+        if new_ingredient == nil
             break
             # ends at the first nonexistent ingredient
         else
-            new_cocktail.ingredients << find_or_create_ingredient(cocktail_hash["strIngredient#{num}"])
-            # creates ingredient if nonexistent, then adds to cocktail
+            created_ingredient = find_or_create_ingredient(new_ingredient)
+            new_cocktail.ingredients << created_ingredient
+            # creates ingredient if nonexistent, then creates relationship to cocktail
+            new_cocktail_ingredient = CocktailIngredient.all.find_by(cocktail_id: new_cocktail.id, ingredient_id: created_ingredient.id)
+            # finds CocktailIngredient bridging the new relationship
+            new_cocktail_ingredient.measure = cocktail_hash["strMeasure#{num}"]
+            # Adds measure quantity to CocktailIngredient instance
+            new_cocktail_ingredient.save
+            # Saves CocktailIngredient instance to database
         end
     end
 end
