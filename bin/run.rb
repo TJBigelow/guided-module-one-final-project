@@ -1,4 +1,4 @@
 require_relative '../config/environment'
-
-binding.pry
-0
+new_cli = CommandLineInterface.new
+new_cli.greet
+new_cli.landing_page
