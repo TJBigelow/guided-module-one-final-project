@@ -1,14 +1,9 @@
 class CommandLineInterface
 
     @@cabinet = []
-    @@cocktails = []
 
     def cabinets
         @@cabinet
-    end
-
-    def cocktails
-        @@cocktails
     end
 
     def greet
@@ -103,7 +98,6 @@ class CommandLineInterface
     def ingredient_search(ingredient_input)
         lookup_array = Ingredient.all.map{|c| [c.id, c.name.downcase]}
         lookup_id = lookup_array.find{|i| i[1] == ingredient_input}
-
         if !lookup_id
             puts "That ingredient doesn't exist in our database, would you like to add it? (y/n)"
             user_input = gets.chomp.downcase
@@ -149,7 +143,6 @@ class CommandLineInterface
     def ingredient_search_for_cabinet(ingredient_input)
         lookup_array = Ingredient.all.map{|c| [c.id, c.name.downcase]}
         lookup_id = lookup_array.find{|i| i[1] == ingredient_input}
-
         if !lookup_id
             puts "That ingredient doesn't exist in our database, would you like to add it? (y/n)"
             user_input = gets.chomp.downcase
