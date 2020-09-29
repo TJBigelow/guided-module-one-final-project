@@ -1,4 +1,4 @@
-class CreateSchema < ActiveRecord::Migration[6.0]
+class CreateSchema < ActiveRecord::Migration[4.2]
   def change
     create_table :cocktails do |t|
       t.string :name

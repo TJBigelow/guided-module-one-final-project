@@ -1,5 +1,4 @@
 require_relative '../config/environment'
-# require_relative '../db/seeds.rb'
 
 def api_response(url, key)
     response_string = RestClient.get(url)
@@ -57,10 +56,9 @@ def create_ingredients_from_cocktail(cocktail_hash, new_cocktail)
     end
 end
 
-
-
 ('a'..'z').each do |letter|
     find_or_create_cocktails_from_first_letter(letter)
 end
-binding.pry
-0
+('0'..'9').each do |letter|
+    find_or_create_cocktails_from_first_letter(letter)
+end
