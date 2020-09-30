@@ -12,7 +12,7 @@ class CommandLineInterface
 
     def landing_page
         system 'clear'
-        puts "What would you like to do?\n1. Lookup Cocktail\n2. Lookup Ingredient\n3. Find out what cocktails you can make\nInput number of choice"
+        puts "What would you like to do?\n1. Lookup Cocktail\n2. Lookup Ingredient\n3. Find out what cocktails you can make\nInput number of choice or type 'quit' to exit program."
         user_input = gets.chomp
         if user_input == "1"
             puts "Lets lookup a cocktail!"
@@ -56,6 +56,7 @@ class CommandLineInterface
     def ingredient_page(lookup)
         system 'clear'
         puts "Ingredient Name: #{lookup.name}\n---\nIngredient Description:\n#{lookup.description}"
+
     end
 
     def cocktail_lookup
@@ -75,6 +76,7 @@ class CommandLineInterface
         user_input = gets.chomp.downcase
         lookup = ingredient_search(user_input)
         self.ingredient_page(lookup)
+        self.what_you_could_make(lookup)
         puts "Want to delete this ingredient? (y/n)"
         user_input = gets.chomp.downcase
             if ['y','yes'].any?(user_input)
@@ -179,6 +181,17 @@ class CommandLineInterface
         end
     end
 
+    def what_you_could_make(lookup)#find all cocktails with a particular ingredient
+        cocktails = CocktailIngredient.all.map do |ci|
+            if ci.ingredient_id == lookup.id
+                ci.cocktail_id
+                end
+        end
+        list = cocktails.select {|c| c}
+        cocktail_obj = Cocktail.all.select {|c| list.include?(c.id)}
+        puts "These are some of the cocktails you can make with #{lookup.name}:"
+        puts cocktail_obj.map {|co| co.name}
+    end
 
 
     def delete_ingredient(ingredient_input)
