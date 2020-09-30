@@ -160,25 +160,36 @@ class CommandLineInterface
         Ingredient.all.find(lookup_id)
     end
 
-    def cocktail_options
+    def cocktail_options#ingredients included in cabinet
         # system 'clear'
-        # build_cabinet
-        # cocktails = Cocktail.all.select{|c| c.ingredients.all?{|i| cabinet.include?(i)}}
-        system 'clear'
-        puts "With your ingredients you could make:"
-        puts @cocktails.map{|c| c.name}
-        puts "Are you sure you do not want to add any more ingredients to your cabinet? (y/n)"
-        user_input = gets.chomp.downcase
-        if ['y','yes'].any?(user_input)
+        # puts "With your ingredients you could make:"
+        # puts @cocktails.map{|c| c.name}
+        # puts "Are you sure you do not want to add any more ingredients to your cabinet? (y/n)"
+        # user_input = gets.chomp.downcase
+        # if ['y','yes'].any?(user_input)
             system 'clear'
             puts "Here is a toast to you!"
             puts "With your ingredients you could make:"
-            puts @cocktails.map{|c| "#{c.name}\n"}
-            sleep(5)
-            self.landing_page
-        else
-            build_cabinet
-        end
+            puts "-----"
+            puts @cocktails.map{|c| "#{(@cocktails.index(c)+1)}. #{c.name}\n"}
+            puts "Do you want to know about any of these cocktails?\nEnter number of cocktail or 'end' to return to landing page:"
+            user_input = gets.chomp
+            if user_input.to_i <= @cocktails.length && user_input.to_i > 0
+                cocktail_page(@cocktails[user_input.to_i - 1])
+                puts "Press Enter to go back."
+                user_input = gets.chomp
+                cocktail_options
+            elsif user_input.downcase == "end"
+                self.landing_page
+            else
+                cocktail_options
+            end
+
+            #sleep(5)
+            # self.return_to_landing
+        # else
+        #     build_cabinet
+        # end
     end
 
     def what_you_could_make(lookup)#find all cocktails with a particular ingredient
