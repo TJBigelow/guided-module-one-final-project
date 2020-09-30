@@ -241,7 +241,6 @@ class CommandLineInterface
         end
         list = cocktails.select {|c| c}
         cocktail_obj = Cocktail.all.select {|c| list.include?(c.id)}
-        puts "These are some of the cocktails you can make with #{lookup.name}:"
         k = cocktail_obj.map {|co| co.name}
         puts "---\nThese are some of the cocktails you can make with #{lookup.name}:"
         puts k.sample(4)
