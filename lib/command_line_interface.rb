@@ -146,7 +146,7 @@ class CommandLineInterface
             if !@cocktails.empty?
                 puts "With your ingredients you could make: \n#{@cocktails.map{|c| c.name}} \n---"
             end
-            puts "What else would you like to add to your liquor cabinet? If finished, type \"end\"\n."
+            puts "What else would you like to add to your liquor cabinet? If finished, type \"end\""
             user_input = gets.chomp.downcase
             if user_input != 'end'
                 self.cabinets << ingredient_search_for_cabinet(user_input)
