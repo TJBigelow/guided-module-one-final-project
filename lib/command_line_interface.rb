@@ -38,27 +38,6 @@ class CommandLineInterface
         end
     end
 
-    def cocktail_page(lookup)
-        system 'clear'
-        puts"Cocktail Name: #{lookup.name}"
-        puts "---"
-        puts "Cocktail Ingredients:"
-        lookup.ingredients.each do |i|
-            # binding.pry
-            ci = CocktailIngredient.all.find{|ci| ci.ingredient_id == i.id && ci.cocktail_id == lookup.id}
-            puts "#{i.name} - #{ci.measure}"
-        end
-        puts "---\nCocktail Instructions:"
-        puts lookup.instructions
-        puts "---\nCocktail Glass:"
-        puts lookup.glass
-    end
-
-    def ingredient_page(lookup)
-        system 'clear'
-        puts "Ingredient Name: #{lookup.name}\n---\nIngredient Description:\n#{lookup.description}"
-    end
-
     def cocktail_lookup
         system 'clear'
         puts "Which cocktail would you like to look up?"
@@ -80,7 +59,7 @@ class CommandLineInterface
             lookup_id = lookup_id.first
         end
         lookup = Cocktail.all.find(lookup_id)
-        self.cocktail_page(lookup)
+        lookup.cocktail_page
         self.return_to_landing
     end
 
@@ -130,19 +109,8 @@ class CommandLineInterface
         puts "Which ingredient would you like to look up?"
         user_input = gets.chomp
         lookup = ingredient_search(user_input)
-        self.ingredient_page(lookup)
+        lookup.ingredient_page
         self.what_you_could_make(lookup)
-        puts "---\nWant to delete this ingredient? (y/n)"
-        user_input = gets.chomp.downcase
-            if ['y','yes'].any?(user_input)
-                puts "password?"
-                user_input = gets.chomp
-                if user_input == "DELETE"
-                    delete_ingredient(lookup)
-                else
-                    puts "Incorrect Password"
-                end
-            end
         self.return_to_landing
     end
 
@@ -178,7 +146,7 @@ class CommandLineInterface
             if !@cocktails.empty?
                 puts "With your ingredients you could make: \n#{@cocktails.map{|c| c.name}} \n---"
             end
-            puts "What else would you like to add to your liquor cabinet? If finished, type \"end\"."
+            puts "What else would you like to add to your liquor cabinet? If finished, type \"end\"\n."
             user_input = gets.chomp.downcase
             if user_input != 'end'
                 self.cabinets << ingredient_search_for_cabinet(user_input)
@@ -216,13 +184,14 @@ class CommandLineInterface
     def cocktail_options#ingredients included in cabinet
             system 'clear'
             puts "Here is a toast to you!"
-            puts "With your ingredients you could make:"
             puts "-----"
+            puts "With your ingredients you could make:"
             puts @cocktails.map{|c| "#{(@cocktails.index(c)+1)}. #{c.name}\n"}
+            puts "-----"
             puts "Do you want to know about any of these cocktails?\nEnter number of cocktail or 'end' to return to landing page:"
             user_input = gets.chomp
             if user_input.to_i <= @cocktails.length && user_input.to_i > 0
-                cocktail_page(@cocktails[user_input.to_i - 1])
+                (@cocktails[user_input.to_i - 1]).cocktail_page
                 puts "Press Enter to go back."
                 user_input = gets.chomp
                 cocktail_options
@@ -246,11 +215,6 @@ class CommandLineInterface
         puts k.sample(4)
     end
 
-
-    def delete_ingredient(ingredient_input)
-        Ingredient.destroy(ingredient_input.id)
-    end
-
     def return_to_landing
         puts "------\nPress enter to return to main menu."
         user_input = gets.chomp.downcase
@@ -258,5 +222,4 @@ class CommandLineInterface
             self.landing_page
         end
     end
-
 end
