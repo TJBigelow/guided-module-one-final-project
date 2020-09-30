@@ -45,7 +45,7 @@ class CommandLineInterface
                 new_cocktail = add_cocktail(cocktail_input)
                 lookup_id = new_cocktail.id
             else
-                self.landing_page####needs to return to the building of the cabinet while retaining the cabinet from before
+                self.landing_page
             end
             lookup_id = new_cocktail.id
         else
@@ -123,25 +123,7 @@ class CommandLineInterface
                 new_ingredient = add_ingredient(ingredient_input)
                 lookup_id = new_ingredient.id
             else
-                self.landing_page####needs to return to the building of the cabinet while retaining the cabinet from before
-            end
-        else
-            lookup_id = lookup_id.first
-        end
-        Ingredient.all.find(lookup_id)
-    end
-
-    def ingredient_search_for_cabinet(ingredient_input)
-        lookup_array = Ingredient.all.map{|c| [c.id, c.name.downcase]}
-        lookup_id = lookup_array.find{|i| i[1] == ingredient_input}
-        if !lookup_id
-            puts "That ingredient doesn't exist in our database, would you like to add it? (y/n)"
-            user_input = gets.chomp.downcase
-            if ['y','yes'].any?(user_input)
-                new_ingredient = add_ingredient(ingredient_input)
-                lookup_id = new_ingredient.id
-            else
-                build_cabinet####needs to return to the building of the cabinet while retaining the cabinet from before
+                self.landing_page
             end
         else
             lookup_id = lookup_id.first

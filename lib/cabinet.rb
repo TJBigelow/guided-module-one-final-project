@@ -58,10 +58,10 @@ class Cabinet
             puts "That ingredient doesn't exist in our database, would you like to add it? (y/n)"
             user_input = gets.chomp.downcase
             if ['y','yes'].any?(user_input)
-                new_ingredient = add_ingredient(ingredient_input)
+                new_ingredient = CommandLineInterface.new.add_ingredient(ingredient_input)
                 lookup_id = new_ingredient.id
             else
-                build_cabinet####needs to return to the building of the cabinet while retaining the cabinet from before
+                self.build####needs to return to the building of the cabinet while retaining the cabinet from before
             end
         else
             lookup_id = lookup_id.first
