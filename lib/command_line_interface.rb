@@ -56,18 +56,40 @@ class CommandLineInterface
     def ingredient_page(lookup)
         system 'clear'
         puts "Ingredient Name: #{lookup.name}\n---\nIngredient Description:\n#{lookup.description}"
-
     end
 
     def cocktail_lookup
         system 'clear'
         puts "Which cocktail would you like to look up?"
-        user_input = gets.chomp.downcase
+        cocktail_input = gets.chomp.downcase
         lookup_array = Cocktail.all.map{|c| [c.id, c.name.downcase]}
-        lookup_id = lookup_array.find{|c| c[1] == user_input}[0]
-        lookup = Cocktail.all.find(lookup_id)
-        self.cocktail_page(lookup)
-        self.return_to_landing
+        #binding.pry
+        lookup_id = lookup_array.find{|c| c[1] == cocktail_input}
+        if lookup_id
+            lookup = Cocktail.all.find(lookup_id)
+            self.cocktail_page(lookup)
+            self.return_to_landing
+        else
+            puts "That cocktail does not exist in our database. \nWould you like to add it? (y/n)"
+            user_input = gets.chomp.downcase
+            if ['y','yes'].any?(user_input)
+                new_cocktail = add_cocktail(cocktail_input)
+                lookup_id = new_cocktail.id
+            else
+                self.landing_page####needs to return to the building of the cabinet while retaining the cabinet from before
+            end
+
+        end
+    end
+
+    def add_cocktail(cocktail_input)
+        puts "Ingredients: "
+        user_input = gets.chomp.downcase
+        ingredient_search(user_input)
+
+        puts "Describe #{cocktail_input}"
+        description = gets.chomp
+        Cocktail.create(name: cocktail_input, description: description)
     end
 
     def ingredient_lookup
@@ -77,7 +99,7 @@ class CommandLineInterface
         lookup = ingredient_search(user_input)
         self.ingredient_page(lookup)
         self.what_you_could_make(lookup)
-        puts "Want to delete this ingredient? (y/n)"
+        puts "---\nWant to delete this ingredient? (y/n)"
         user_input = gets.chomp.downcase
             if ['y','yes'].any?(user_input)
                 puts "password?"
@@ -114,8 +136,6 @@ class CommandLineInterface
         end
         Ingredient.all.find(lookup_id)
     end
-
-
 
     def build_cabinet
         if !self.cabinets.empty?
@@ -161,12 +181,6 @@ class CommandLineInterface
     end
 
     def cocktail_options#ingredients included in cabinet
-        # system 'clear'
-        # puts "With your ingredients you could make:"
-        # puts @cocktails.map{|c| c.name}
-        # puts "Are you sure you do not want to add any more ingredients to your cabinet? (y/n)"
-        # user_input = gets.chomp.downcase
-        # if ['y','yes'].any?(user_input)
             system 'clear'
             puts "Here is a toast to you!"
             puts "With your ingredients you could make:"
@@ -184,12 +198,6 @@ class CommandLineInterface
             else
                 cocktail_options
             end
-
-            #sleep(5)
-            # self.return_to_landing
-        # else
-        #     build_cabinet
-        # end
     end
 
     def what_you_could_make(lookup)#find all cocktails with a particular ingredient
@@ -201,7 +209,9 @@ class CommandLineInterface
         list = cocktails.select {|c| c}
         cocktail_obj = Cocktail.all.select {|c| list.include?(c.id)}
         puts "These are some of the cocktails you can make with #{lookup.name}:"
-        puts cocktail_obj.map {|co| co.name}
+        k = cocktail_obj.map {|co| co.name}
+        puts "---\nThese are some of the cocktails you can make with #{lookup.name}:"
+        puts k.sample(4)
     end
 
 
