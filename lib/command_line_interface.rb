@@ -46,11 +46,12 @@ class CommandLineInterface
         lookup.ingredients.each do |i|
             # binding.pry
             ci = CocktailIngredient.all.find{|ci| ci.ingredient_id == i.id && ci.cocktail_id == lookup.id}
-            puts "#{ci.measure}#{i.name}"
+            puts "#{i.name} - #{ci.measure}"
         end
-        puts "---"
-        puts "Cocktail Instructions:"
+        puts "---\nCocktail Instructions:"
         puts lookup.instructions
+        puts "---\nCocktail Glass:"
+        puts lookup.glass
     end
 
     def ingredient_page(lookup)
@@ -61,15 +62,11 @@ class CommandLineInterface
     def cocktail_lookup
         system 'clear'
         puts "Which cocktail would you like to look up?"
-        cocktail_input = gets.chomp.downcase
+        cocktail_input = gets.chomp
         lookup_array = Cocktail.all.map{|c| [c.id, c.name.downcase]}
         #binding.pry
-        lookup_id = lookup_array.find{|c| c[1] == cocktail_input}
-        if lookup_id
-            lookup = Cocktail.all.find(lookup_id)
-            self.cocktail_page(lookup)
-            self.return_to_landing
-        else
+        lookup_id = lookup_array.find{|c| c[1] == cocktail_input.downcase}
+        if !lookup_id
             puts "That cocktail does not exist in our database. \nWould you like to add it? (y/n)"
             user_input = gets.chomp.downcase
             if ['y','yes'].any?(user_input)
@@ -78,24 +75,60 @@ class CommandLineInterface
             else
                 self.landing_page####needs to return to the building of the cabinet while retaining the cabinet from before
             end
-
+            lookup_id = new_cocktail.id
+        else
+            lookup_id = lookup_id.first
         end
+        lookup = Cocktail.all.find(lookup_id)
+        self.cocktail_page(lookup)
+        self.return_to_landing
     end
 
     def add_cocktail(cocktail_input)
-        puts "Ingredients: "
-        user_input = gets.chomp.downcase
-        ingredient_search(user_input)
+        ingredients = cocktail_ingredients
+        puts "#{cocktail_input} ingredients: #{ingredients.map{|i| i.name}}"
+        ingredient_measures = ingredients.map do |i|
+            puts "What measurement of #{i.name}"
+            gets.chomp
+        end    
+        puts "How do you make #{cocktail_input}?"
+        instructions = gets.chomp
+        puts "What glass do you drink #{cocktail_input} from?"
+        glass = gets.chomp
+        new_cocktail = Cocktail.create(name: cocktail_input, instructions: instructions, glass: glass, category: 'User Submitted')
+        ingredients.each do |i| 
+            new_cocktail.ingredients << i
+            new_cocktail_ingredient = CocktailIngredient.all.find_by(cocktail_id: new_cocktail.id, ingredient_id: i.id)
+            index = ingredients.index(i)
+            new_cocktail_ingredient.measure = ingredient_measures[index]
+            new_cocktail_ingredient.save
+        end
+        new_cocktail     
+    end
 
-        puts "Describe #{cocktail_input}"
-        description = gets.chomp
-        Cocktail.create(name: cocktail_input, description: description)
+    def cocktail_ingredients(ing_arr=[])
+        ingredients = ing_arr
+        if !ingredients.empty? 
+            puts "Current ingredients: #{ingredients.map{|i| i.name}}"  
+            puts "add more ingredients or type 'end'"
+            user_input = gets.chomp
+            if user_input.downcase == 'end'
+                return ingredients
+            else
+                ingredients << ingredient_search(user_input)
+            end
+        else      
+            puts "Add an ingredient"
+            user_input = gets.chomp.downcase
+            ingredients << ingredient_search(user_input)
+        end
+        cocktail_ingredients(ingredients)
     end
 
     def ingredient_lookup
         system 'clear'
         puts "Which ingredient would you like to look up?"
-        user_input = gets.chomp.downcase
+        user_input = gets.chomp
         lookup = ingredient_search(user_input)
         self.ingredient_page(lookup)
         self.what_you_could_make(lookup)
@@ -121,7 +154,7 @@ class CommandLineInterface
 
     def ingredient_search(ingredient_input)
         lookup_array = Ingredient.all.map{|c| [c.id, c.name.downcase]}
-        lookup_id = lookup_array.find{|i| i[1] == ingredient_input}
+        lookup_id = lookup_array.find{|i| i[1] == ingredient_input.downcase}
         if !lookup_id
             puts "That ingredient doesn't exist in our database, would you like to add it? (y/n)"
             user_input = gets.chomp.downcase
