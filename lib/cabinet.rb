@@ -45,7 +45,7 @@ class Cabinet
             user_input = gets.chomp
             cocktail_options
         elsif user_input.downcase == "end"
-            CommandLineInterface.new.landing_page
+            CommandLineInterface.landing_page
         else
             cocktail_options
         end
@@ -68,6 +68,4 @@ class Cabinet
         end
         Ingredient.all.find(lookup_id)
     end
-
-
 end

@@ -7,14 +7,14 @@ class Ingredient < ActiveRecord::Base
         puts "Ingredient Name: #{self.name}\n---\nIngredient Description:\n#{self.description}"
     end
 
-    def self.ingredient_lookup
+    def self.lookup
         system 'clear'
         puts "Which ingredient would you like to look up?"
         user_input = gets.chomp
         lookup = self.ingredient_search(user_input)
         lookup.ingredient_page
         lookup.what_you_could_make
-        CommandLineInterface.new.return_to_landing
+        CommandLineInterface.return_to_landing
     end
 
     def self.ingredient_search(ingredient_input)
@@ -27,7 +27,7 @@ class Ingredient < ActiveRecord::Base
                 new_ingredient = self.add_ingredient(ingredient_input)
                 lookup_id = new_ingredient.id
             else
-                CommandLineInterface.new.landing_page####needs to return to the building of the cabinet while retaining the cabinet from before
+                CommandLineInterface.landing_page####needs to return to the building of the cabinet while retaining the cabinet from before
             end
         else
             lookup_id = lookup_id.first
