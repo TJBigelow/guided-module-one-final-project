@@ -10,11 +10,11 @@ class CommandLineInterface
         if user_input == "1"
             puts "Lets lookup a cocktail!"
             sleep(1.5)###
-            self.cocktail_lookup
+            cocktail_lookup
         elsif user_input == "2"
             puts "Lets lookup an ingredient!"
             sleep(1.5)###
-            ingredient_lookup
+            Ingredient.ingredient_lookup
         elsif user_input == "3"
             puts "Lets lookup a cocktail including your ingredients!"
             new_cabinet = Cabinet.new

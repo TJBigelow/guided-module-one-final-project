@@ -58,7 +58,7 @@ class Cabinet
             puts "That ingredient doesn't exist in our database, would you like to add it? (y/n)"
             user_input = gets.chomp.downcase
             if ['y','yes'].any?(user_input)
-                new_ingredient = add_ingredient(ingredient_input)
+                new_ingredient = Ingredient.add_ingredient(ingredient_input)
                 lookup_id = new_ingredient.id
             else
                 build####needs to return to the building of the cabinet while retaining the cabinet from before
@@ -68,10 +68,6 @@ class Cabinet
         end
         Ingredient.all.find(lookup_id)
     end
-end
 
-def add_ingredient(ingredient_input)
-    puts "Describe #{ingredient_input}"
-    description = gets.chomp
-    Ingredient.create(name: ingredient_input, description: description)
+
 end
