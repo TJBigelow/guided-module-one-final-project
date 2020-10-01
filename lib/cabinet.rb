@@ -61,11 +61,17 @@ class Cabinet
                 new_ingredient = add_ingredient(ingredient_input)
                 lookup_id = new_ingredient.id
             else
-                build_cabinet####needs to return to the building of the cabinet while retaining the cabinet from before
+                build####needs to return to the building of the cabinet while retaining the cabinet from before
             end
         else
             lookup_id = lookup_id.first
         end
         Ingredient.all.find(lookup_id)
     end
+end
+
+def add_ingredient(ingredient_input)
+    puts "Describe #{ingredient_input}"
+    description = gets.chomp
+    Ingredient.create(name: ingredient_input, description: description)
 end
