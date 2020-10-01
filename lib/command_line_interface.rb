@@ -1,20 +1,22 @@
 class CommandLineInterface
-    def greet
+    def self.greet
+        system 'clear'
         puts "Welcome to Cocktail Finder, the command line solution for your cocktail-finding needs!"
+        sleep (1.5)
     end
 
-    def landing_page
+    def self.landing_page
         system 'clear'
         puts "What would you like to do?\n1. Lookup Cocktail\n2. Lookup Ingredient\n3. Find out what cocktails you can make\nInput number of choice or type 'quit' to exit program."
         user_input = gets.chomp
         if user_input == "1"
             puts "Lets lookup a cocktail!"
             sleep(1.5)###
-            self.cocktail_lookup
+            Cocktail.lookup
         elsif user_input == "2"
             puts "Lets lookup an ingredient!"
             sleep(1.5)###
-            self.ingredient_lookup
+            Ingredient.lookup
         elsif user_input == "3"
             puts "Lets lookup a cocktail including your ingredients!"
             new_cabinet = Cabinet.new
@@ -31,6 +33,7 @@ class CommandLineInterface
         end
     end
 
+<<<<<<< HEAD
     def cocktail_lookup
         system 'clear'
         puts "Which cocktail would you like to look up?"
@@ -145,6 +148,9 @@ class CommandLineInterface
     end
 
     def return_to_landing
+=======
+    def self.return_to_landing
+>>>>>>> tom
         puts "------\nPress enter to return to main menu."
         user_input = gets.chomp.downcase
         if user_input
